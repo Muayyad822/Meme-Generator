@@ -3,24 +3,93 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Meme Generator</title>
-  <link rel="stylesheet" href="style.css">
+  <title>MemeGen</title>
+  <script src="https://cdn.tailwindcss.com"></script>
   <link rel="shortcut icon" href="https://fav.farm/😆">
 </head>
-<body>
-  <h1>Meme Generator</h1>
+<body class="bg-gray-300 flex flex-col items-center justify-center min-h-screen p-6">
+  <h1 class="text-4xl font-bold text-gray-800 mb-8">MemeGen</h1>
   
-  <div class="controls">
-    <input type="text" id="topText" placeholder="Enter Top Text">
-    <input type="text" id="bottomText" placeholder="Enter Bottom Text">
-    <input type="file" id="imageInput" accept="image/*">
-    <div class="btns">
-        <button id="generate" onclick="generateMeme()">Generate Meme</button>
-        <button id="download" onclick="downloadMeme()">Download Meme</button>
+  <div class="bg-white p-6 rounded-lg shadow-lg w-full max-w-md">
+    <div class="space-y-4">
+      <input 
+        type="text" 
+        id="topText" 
+        placeholder="Enter Top Text" 
+        class="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+      >
+      <input 
+        type="text" 
+        id="bottomText" 
+        placeholder="Enter Bottom Text" 
+        class="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+      >
+      <input 
+        type="file" 
+        id="imageInput" 
+        accept="image/*" 
+        class="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+      >
+      <div class="grid grid-cols-2 gap-4">
+        <label for="fontSize">Font Size</label>
+        <input 
+          type="number" 
+          id="fontSize" 
+          placeholder="Font Size" 
+          value="30" 
+          class="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+        >
+        <label for="fontFamily">Font</label>
+        <select 
+          id="fontFamily" 
+          class="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+        >
+          <option value="Impact">Impact</option>
+          <option value="Arial">Arial</option>
+          <option value="Comic Sans MS">Comic Sans</option>
+          <option value="Verdana">Verdana</option>
+        </select>
+      </div>
+      <div class="grid grid-cols-2 gap-4">
+        <label for="textColor">Text Color</label>
+        <input 
+          type="color" 
+          id="textColor" 
+          value="#ffffff" 
+          class="w-full p-1 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+        >
+        <label for="strokeColor">Stroke Color</label>
+        <input 
+          type="color" 
+          id="strokeColor" 
+          value="#000000" 
+          class="w-full p-1 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+        >
+      </div>
+      <div class="flex justify-center gap-4">
+        <button 
+          id="generate" 
+          class=" bg-blue-500 text-white p-2 rounded-md hover:bg-blue-600 transition duration-200"
+        >
+          Generate Meme
+        </button>
+        <button 
+          id="download" 
+          class=" bg-green-500 text-white p-2 rounded-md hover:bg-green-600 transition duration-200"
+        >
+          Download Meme
+        </button>
+        <button 
+          id="reset" 
+          class=" bg-red-500 text-white p-2 rounded-md hover:bg-red-600 transition duration-200"
+        >
+          Reset
+        </button>
+      </div>
     </div>
   </div>
   
-  <canvas id="memeCanvas" width="580" height="450"></canvas>
+  <canvas id="memeCanvas" width="480" height="350" class="mt-8 border border-gray-900 rounded-lg shadow-lg"></canvas>
 
   <script src="index.js"></script>
 </body>
