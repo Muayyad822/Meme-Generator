@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Meme Generator</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="shortcut icon" href="https://fav.farm/😆">
+</head>
+<body>
+  <h1>Meme Generator</h1>
+  
+  <div class="controls">
+    <input type="text" id="topText" placeholder="Enter Top Text">
+    <input type="text" id="bottomText" placeholder="Enter Bottom Text">
+    <input type="file" id="imageInput" accept="image/*">
+    <div class="btns">
+        <button id="generate" onclick="generateMeme()">Generate Meme</button>
+        <button id="download" onclick="downloadMeme()">Download Meme</button>
+    </div>
+  </div>
+  
+  <canvas id="memeCanvas" width="580" height="450"></canvas>
+
+  <script src="index.js"></script>
+</body>
+</html>
