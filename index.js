@@ -1,20 +1,33 @@
+// Cache DOM elements
 const canvas = document.getElementById('memeCanvas');
 const ctx = canvas.getContext('2d');
-const imageInput = document.getElementById('imageInput');
-const topTextInput = document.getElementById('topText');
-const bottomTextInput = document.getElementById('bottomText');
-const generateButton = document.getElementById('generate');
-const downloadButton = document.getElementById('download');
-const resetButton = document.getElementById('reset');
-const fontSizeInput = document.getElementById('fontSize');
-const fontFamilyInput = document.getElementById('fontFamily');
-const textColorInput = document.getElementById('textColor');
-const strokeColorInput = document.getElementById('strokeColor');
+const elements = {
+  imageInput: document.getElementById('imageInput'),
+  topTextInput: document.getElementById('topText'),
+  bottomTextInput: document.getElementById('bottomText'),
+  generateButton: document.getElementById('generate'),
+  downloadButton: document.getElementById('download'),
+  resetButton: document.getElementById('reset'),
+  fontSizeInput: document.getElementById('fontSize'),
+  fontFamilyInput: document.getElementById('fontFamily'),
+  textColorInput: document.getElementById('textColor'),
+  strokeColorInput: document.getElementById('strokeColor'),
+};
+
+// Default values
+const DEFAULTS = {
+  fontSize: 30,
+  fontFamily: 'Impact',
+  textColor: '#ffffff',
+  strokeColor: '#000000',
+  canvasWidth: 580,
+  canvasHeight: 450,
+};
 
 let uploadedImage = null;
 
 // Load the image onto the canvas
-imageInput.addEventListener('change', (event) => {
+elements.imageInput.addEventListener('change', (event) => {
   const file = event.target.files[0];
   if (!file) return;
 
@@ -35,17 +48,16 @@ imageInput.addEventListener('change', (event) => {
 function resizeCanvasToImage() {
   if (!uploadedImage) return;
 
-  const maxWidth = 580;
-  const maxHeight = 450;
+  const { canvasWidth, canvasHeight } = DEFAULTS;
   const aspectRatio = uploadedImage.width / uploadedImage.height;
 
-  if (uploadedImage.width > maxWidth || uploadedImage.height > maxHeight) {
-    if (uploadedImage.width > uploadedImage.height) {
-      canvas.width = maxWidth;
-      canvas.height = maxWidth / aspectRatio;
+  if (uploadedImage.width > canvasWidth || uploadedImage.height > canvasHeight) {
+    if (aspectRatio > 1) {
+      canvas.width = canvasWidth;
+      canvas.height = canvasWidth / aspectRatio;
     } else {
-      canvas.height = maxHeight;
-      canvas.width = maxHeight * aspectRatio;
+      canvas.height = canvasHeight;
+      canvas.width = canvasHeight * aspectRatio;
     }
   } else {
     canvas.width = uploadedImage.width;
@@ -63,12 +75,12 @@ function drawImage() {
   ctx.clearRect(0, 0, canvas.width, canvas.height);
   ctx.drawImage(uploadedImage, 0, 0, canvas.width, canvas.height);
 
-  const topText = topTextInput.value;
-  const bottomText = bottomTextInput.value;
-  const fontSize = parseInt(fontSizeInput.value) || 30;
-  const fontFamily = fontFamilyInput.value || 'Impact';
-  const textColor = textColorInput.value || 'white';
-  const strokeColor = strokeColorInput.value || 'black';
+  const topText = elements.topTextInput.value;
+  const bottomText = elements.bottomTextInput.value;
+  const fontSize = parseInt(elements.fontSizeInput.value) || DEFAULTS.fontSize;
+  const fontFamily = elements.fontFamilyInput.value || DEFAULTS.fontFamily;
+  const textColor = elements.textColorInput.value || DEFAULTS.textColor;
+  const strokeColor = elements.strokeColorInput.value || DEFAULTS.strokeColor;
 
   // Set text styles
   ctx.font = `${fontSize}px ${fontFamily}`;
@@ -79,24 +91,26 @@ function drawImage() {
 
   // Draw top text
   if (topText) {
-    ctx.fillText(topText, canvas.width / 2, fontSize + 10);
-    ctx.strokeText(topText, canvas.width / 2, fontSize + 10);
+    drawText(topText, canvas.width / 2, fontSize + 10);
   }
 
   // Draw bottom text
   if (bottomText) {
-    ctx.fillText(bottomText, canvas.width / 2, canvas.height - 10);
-    ctx.strokeText(bottomText, canvas.width / 2, canvas.height - 10);
+    drawText(bottomText, canvas.width / 2, canvas.height - 10);
   }
 }
 
+// Helper function to draw text
+function drawText(text, x, y) {
+  ctx.fillText(text, x, y);
+  ctx.strokeText(text, x, y);
+}
+
 // Generate meme by drawing text on the uploaded image
-generateButton.addEventListener('click', () => {
-  drawImage();
-});
+elements.generateButton.addEventListener('click', drawImage);
 
 // Download the meme as an image
-downloadButton.addEventListener('click', () => {
+elements.downloadButton.addEventListener('click', () => {
   if (!uploadedImage) {
     alert('Please upload an image and generate a meme first!');
     return;
@@ -110,17 +124,34 @@ downloadButton.addEventListener('click', () => {
 });
 
 // Reset the canvas and inputs
-resetButton.addEventListener('click', () => {
+elements.resetButton.addEventListener('click', resetCanvas);
+
+function resetCanvas() {
   ctx.clearRect(0, 0, canvas.width, canvas.height);
   uploadedImage = null;
-  imageInput.value = '';
-  topTextInput.value = '';
-  bottomTextInput.value = '';
-  fontSizeInput.value = '30';
-  fontFamilyInput.value = 'Impact';
-  textColorInput.value = '#ffffff';
-  strokeColorInput.value = '#000000';
-  canvas.width = 580;
-  canvas.height = 450;
+
+  // Reset inputs to default values
+  elements.imageInput.value = '';
+  elements.topTextInput.value = '';
+  elements.bottomTextInput.value = '';
+  elements.fontSizeInput.value = DEFAULTS.fontSize;
+  elements.fontFamilyInput.value = DEFAULTS.fontFamily;
+  elements.textColorInput.value = DEFAULTS.textColor;
+  elements.strokeColorInput.value = DEFAULTS.strokeColor;
+
+  // Reset canvas size
+  canvas.width = DEFAULTS.canvasWidth;
+  canvas.height = DEFAULTS.canvasHeight;
+
   alert('Canvas and inputs have been reset!');
+}
+
+// Add real-time preview for text and style changes
+['input', 'change'].forEach((eventType) => {
+  elements.topTextInput.addEventListener(eventType, drawImage);
+  elements.bottomTextInput.addEventListener(eventType, drawImage);
+  elements.fontSizeInput.addEventListener(eventType, drawImage);
+  elements.fontFamilyInput.addEventListener(eventType, drawImage);
+  elements.textColorInput.addEventListener(eventType, drawImage);
+  elements.strokeColorInput.addEventListener(eventType, drawImage);
 });
